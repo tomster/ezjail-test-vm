@@ -1,0 +1,11 @@
+/.installed.cfg
+/.mr.developer.cfg
+/bin/
+/deployment/zfsinstall/
+/develop-eggs/
+/downloads/
+/etc/known_hosts
+/include/
+/lib/
+/src/mr.awsome*
+/vm/
