@@ -71,7 +71,7 @@ stopvm:
 	VBoxManage controlvm $(VM_NAME) acpipowerbutton
 
 
-bootstrapvm:
+bootstrapvm: .installed.cfg
 	./bin/aws do vm-master bootstrap
 
 
