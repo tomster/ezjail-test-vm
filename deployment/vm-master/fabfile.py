@@ -36,7 +36,8 @@ def bootstrap():
     put('../common/authorized_keys', '/mnt/root/.ssh/authorized_keys')
     # setup config files
     put('rc.conf', '/mnt/etc/rc.conf')
-    put('pf.conf', '/mnt/etc/pf.conf')
+    put('ipf.rules', '/mnt/etc/ipf.rules')
+    put('ipnat.rules', '/mnt/etc/ipnat.rules')
     put('sshd_config', '/mnt/etc/ssh/sshd_config')
     put('sshd_config', '/mnt/etc/ssh/sshd_config.base')
     put('dhclient-exit-hooks', '/mnt/etc/dhclient-exit-hooks', mode=0744)
