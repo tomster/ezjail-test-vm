@@ -48,8 +48,11 @@ def bootstrap():
     run('mkdir -p /mnt/usr/local/etc/pkg/repos')
     put('../common/pkg.conf', '/mnt/usr/local/etc/pkg.conf')
     put('../common/FreeBSD.conf', '/mnt/usr/local/etc/pkg/repos/FreeBSD.conf')
-    with settings(hide('warnings'), warn_only=True):
-        run('chroot /mnt pkg')
+    # install pkg, the tarball is also used for the ezjail flavour in bootstrap_ezjail
+    run('mkdir -p /mnt/var/cache/pkg/All')
+    run('fetch -o /mnt/var/cache/pkg/All/pkg-1.2.3.txz http://pkg.freebsd.org/freebsd:9:x86:64/latest/All/pkg-1.2.3.txz')
+    run('chmod 0600 /mnt/var/cache/pkg/All/pkg-1.2.3.txz')
+    run('tar -x -C /mnt --chroot -f /mnt/var/cache/pkg/All/pkg-1.2.3.txz')
     # run pkg2ng for which the shared library path needs to be updated
     run('chroot /mnt /etc/rc.d/ldconfig start')
     run('chroot /mnt pkg2ng')
@@ -100,6 +103,9 @@ def bootstrap_ezjail():
     run('mkdir -p /var/jails/flavours/base/usr/local/etc/pkg/repos')
     put('../common/pkg.conf', '/var/jails/flavours/base/usr/local/etc/pkg.conf')
     put('../common/FreeBSD.conf', '/var/jails/flavours/base/usr/local/etc/pkg/repos/FreeBSD.conf')
+    run('tar -x -C /var/jails/flavours/base --chroot -f /var/cache/pkg/All/pkg-1.2.3.txz')
+    run('mkdir -p /var/jails/flavours/base/var/cache/pkg/All')
+    run('cp /var/cache/pkg/All/* /var/jails/flavours/base/var/cache/pkg/All/')
     run('echo sshd_enable=\\"YES\\" >> /var/jails/flavours/base/etc/rc.conf')
     run('echo PermitRootLogin without-password >> /var/jails/flavours/base/etc/ssh/sshd_config')
     run('cp /root/.ssh/authorized_keys /var/jails/flavours/base/root/.ssh/authorized_keys')
