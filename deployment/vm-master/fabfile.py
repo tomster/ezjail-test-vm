@@ -36,6 +36,7 @@ def bootstrap():
     put('../common/authorized_keys', '/mnt/root/.ssh/authorized_keys')
     # setup config files
     put('rc.conf', '/mnt/etc/rc.conf')
+    put('sysctl.conf', '/mnt/etc/sysctl.conf')
     put('ipf.rules', '/mnt/etc/ipf.rules')
     put('ipnat.rules', '/mnt/etc/ipnat.rules')
     put('sshd_config', '/mnt/etc/ssh/sshd_config')
@@ -70,7 +71,6 @@ def bootstrap():
     run('/bin/cp /boot/zfs/zpool.cache /mnt/boot/zfs/')
     # reduce autoboot delay
     run('echo autoboot_delay=-1 >> /mnt/boot/loader.conf')
-    run('echo security.jail.allow_raw_sockets=1 >> /mnt/etc/sysctl.conf')
     # generate ssh host keys
     run("ssh-keygen -t rsa1 -b 1024 -f /mnt/etc/ssh/ssh_host_key -N ''")
     # run("ssh-keygen -t rsa -f /mnt/etc/ssh/ssh_host_rsa_key -N ''")
