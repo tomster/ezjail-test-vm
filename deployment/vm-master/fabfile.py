@@ -104,6 +104,7 @@ def bootstrap_ezjail():
     put('../common/pkg.conf', '/var/jails/flavours/base/usr/local/etc/pkg.conf')
     put('../common/FreeBSD.conf', '/var/jails/flavours/base/usr/local/etc/pkg/repos/FreeBSD.conf')
     run('tar -x -C /var/jails/flavours/base --chroot -f /var/cache/pkg/All/pkg-1.2.3.txz')
+    run('rm /var/jails/flavours/base/+*')
     run('mkdir -p /var/jails/flavours/base/var/cache/pkg/All')
     run('cp /var/cache/pkg/All/* /var/jails/flavours/base/var/cache/pkg/All/')
     run('echo sshd_enable=\\"YES\\" >> /var/jails/flavours/base/etc/rc.conf')
