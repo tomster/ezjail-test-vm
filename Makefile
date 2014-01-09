@@ -1,4 +1,5 @@
 VIRTUALENV = virtualenv
+PYTHON_TARGETS = bin/python lib/python* include/python*
 
 MFSBSD_URL = http://mfsbsd.vx.sk/files/iso/9/amd64/mfsbsd-se-9.2-RELEASE-amd64.iso
 MFSBSD_FILENAME = $(lastword $(subst /, ,$(MFSBSD_URL)))
@@ -14,12 +15,12 @@ VM_BOOT_DISK = $(VM_PATH)/boot.vdi
 all: .installed.cfg
 
 
-bin/python:
+$(PYTHON_TARGETS):
 	$(VIRTUALENV) --system-site-packages --clear .
 	-./clear-setuptools-dependency-links
 
 
-bin/buildout: bin/python
+bin/buildout: $(PYTHON_TARGETS)
 	bin/pip install zc.buildout
 
 
