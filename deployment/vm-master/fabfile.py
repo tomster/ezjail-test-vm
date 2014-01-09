@@ -108,5 +108,6 @@ def bootstrap_ezjail():
     run('cp /var/cache/pkg/All/* /var/jails/flavours/base/var/cache/pkg/All/')
     run('echo sshd_enable=\\"YES\\" >> /var/jails/flavours/base/etc/rc.conf')
     run('echo PermitRootLogin without-password >> /var/jails/flavours/base/etc/ssh/sshd_config')
+    run('echo Subsystem sftp /usr/libexec/sftp-server >> /var/jails/flavours/base/etc/ssh/sshd_config')
     run('cp /root/.ssh/authorized_keys /var/jails/flavours/base/root/.ssh/authorized_keys')
     run(u'echo Gehe nicht über Los. > /var/jails/flavours/base/etc/motd'.encode('utf-8'))
