@@ -16,6 +16,11 @@ all: .installed.cfg
 
 
 $(PYTHON_TARGETS):
+
+$(PYTHON_TARGETS): python
+
+.SECONDARY: python
+python:
 	$(VIRTUALENV) --clear .
 	-./clear-setuptools-dependency-links
 
