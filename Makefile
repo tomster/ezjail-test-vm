@@ -21,10 +21,12 @@ $(PYTHON_TARGETS):
 
 
 bin/buildout: $(PYTHON_TARGETS)
-	bin/pip install zc.buildout
+	bin/pip install --upgrade zc.buildout
+	touch bin/buildout
+	-./clear-setuptools-dependency-links
 
 
-.installed.cfg: bin/buildout buildout.cfg
+.installed.cfg: bin/buildout buildout.cfg src/*/setup.py
 	bin/buildout -v
 
 
