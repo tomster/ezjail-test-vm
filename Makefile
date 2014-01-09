@@ -1,4 +1,4 @@
-VIRTUALENV = virtualenv
+VIRTUALENV = virtualenv --system-site-packages
 PYTHON_TARGETS = bin/python lib/python* include/python*
 
 MFSBSD_URL = http://mfsbsd.vx.sk/files/iso/9/amd64/mfsbsd-se-9.2-RELEASE-amd64.iso
@@ -16,7 +16,7 @@ all: .installed.cfg
 
 
 $(PYTHON_TARGETS):
-	$(VIRTUALENV) --system-site-packages --clear .
+	$(VIRTUALENV) --clear .
 	-./clear-setuptools-dependency-links
 
 
