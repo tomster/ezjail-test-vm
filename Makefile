@@ -25,8 +25,13 @@ python:
 	-./clear-setuptools-dependency-links
 
 
-bin/buildout: $(PYTHON_TARGETS)
-	bin/pip install --upgrade zc.buildout
+bin/ansible: $(PYTHON_TARGETS)
+	bin/pip install --upgrade --force-reinstall ansible
+	touch bin/ansible
+
+
+bin/buildout: $(PYTHON_TARGETS) bin/ansible
+	bin/pip install --upgrade --force-reinstall zc.buildout
 	touch bin/buildout
 	-./clear-setuptools-dependency-links
 
