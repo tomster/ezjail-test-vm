@@ -60,8 +60,8 @@ $(VM_PATH):
 	mkdir -p $(VM_PATH)
 
 
-$(VM_BOOT_DISK): $(VM_PATH)
-	VBoxManage createhd --filename $(VM_BOOT_DISK) --size 102400 --format VDI
+%.vdi: $(VM_PATH)
+	VBoxManage createhd --filename $@ --size 102400 --format VDI
 
 
 $(VM_VBOX): $(VM_BOOT_DISK)
