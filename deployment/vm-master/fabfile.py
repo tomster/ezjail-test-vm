@@ -9,15 +9,50 @@ env.shell = '/bin/sh -c'
 
 def bootstrap(**kwargs):
     from mr.awsome.common import yesno
-    if not os.path.exists('../roles/common/files/identity.pub'):
-        print "You have to create deployment/roles/common/files/identity.pub first."
-        sys.exit(1)
+    import math
+    necessary_files = [
+        (
+            '../roles/common/files/identity.pub',
+            '/mnt/root/.ssh/authorized_keys'),
+        (
+            'rc.conf',
+            '/mnt/etc/rc.conf'),
+        (
+            'sshd_config',
+            '/mnt/etc/ssh/sshd_config'),
+        (
+            '../roles/common/files/make.conf',
+            '/mnt/etc/make.conf'),
+        (
+            '../roles/common/files/pkg.conf',
+            '/mnt/usr/local/etc/pkg.conf'),
+        (
+            '../roles/common/files/FreeBSD.conf',
+            '/mnt/usr/local/etc/pkg/repos/FreeBSD.conf')]
+    for necessary_file in necessary_files:
+        if not os.path.exists(necessary_file[0]):
+            print "You have to create %s first." % necessary_file[0]
+            sys.exit(1)
+    ssh_keys = set([
+        ('ssh_host_key', '-t rsa1 -b 1024'),
+        ('ssh_host_rsa_key', '-t rsa'),
+        ('ssh_host_dsa_key', '-t dsa'),
+        ('ssh_host_ecdsa_key', '-t ecdsa')])
+    for ssh_key_info in list(ssh_keys):
+        ssh_key = ssh_key_info[0]
+        if os.path.exists(ssh_key):
+            pub_key = '%s.pub' % ssh_key
+            if not os.path.exists(pub_key):
+                print "Public key '%s' for '%s' missing." % (pub_key, ssh_key)
+                sys.exit(1)
+    # default ssh settings for mfsbsd
     env.server.config['fingerprint'] = '02:2e:b4:dd:c3:8a:b7:7b:ba:b2:4a:f0:ab:13:f4:2d'
     env.server.config['password-fallback'] = True
     env.server.config['password'] = 'mfsroot'
+    # allow overwrites from the commandline
     env.server.config.update(kwargs)
-    with settings(hide('output', 'warnings'), warn_only=True):
-        import math
+    # gather infos
+    with settings(hide('output')):
         mounts = run('mount')
         sysctl_devices = run('sysctl -n kern.disks').strip().split()
         realmem = run('sysctl -n hw.realmem').strip()
@@ -31,9 +66,12 @@ def bootstrap(**kwargs):
         run('test -e /dev/{dev} && mount /dev/{dev} /media || true'.format(dev=usb_device))
     bsd_url = env.server.config.get('bootstrap-bsd-url')
     if not bsd_url:
-        bsd_url = run("find /cdrom/ /media/ -name 'base.txz' -exec dirname {} \;").strip()
+        with settings(hide('output', 'warnings'), warn_only=True):
+            result = run("find /cdrom/ /media/ -name 'base.txz' -exec dirname {} \;")
+            if result.return_code == 0:
+                bsd_url = result.strip()
     if not bsd_url:
-        print "Found no BSD system to install, please specify bootstrap-bsd-url"
+        print "Found no FreeBSD system to install, please specify bootstrap-bsd-url and make sure mfsbsd is running"
         return
     install_devices = [cd_device, usb_device]
     devices = set(sysctl_devices)
@@ -74,31 +112,22 @@ def bootstrap(**kwargs):
         bsd_url=bsd_url,
         swap_arg=swap_arg,
         system_pool_arg=system_pool_arg))
-    # create partitions for data pool
-    for device in devices:
-        run('gpart add -t freebsd-zfs -l {data_pool_name}_{device} {device}'.format(
-            data_pool_name=data_pool_name,
-            device=device))
+    # create partitions for data pool, but only if the system pool doesn't use
+    # the whole disk anyway
+    if system_pool_arg:
+        for device in devices:
+            run('gpart add -t freebsd-zfs -l {data_pool_name}_{device} {device}'.format(
+                data_pool_name=data_pool_name,
+                device=device))
     # mount devfs inside the new system
     if 'devfs on /rw/dev' not in mounts:
         run('mount -t devfs devfs /mnt/dev')
-    # setup authorized_keys
+    # setup bare essentials
     run('mkdir -p /mnt/root/.ssh && chmod 0600 /mnt/root/.ssh')
-    put('../roles/common/files/identity.pub', '/mnt/root/.ssh/authorized_keys')
-    # setup config files
-    put('rc.conf', '/mnt/etc/rc.conf')
-    put('sysctl.conf', '/mnt/etc/sysctl.conf')
-    put('ipf.rules', '/mnt/etc/ipf.rules')
-    put('ipnat.rules', '/mnt/etc/ipnat.rules')
-    put('sshd_config', '/mnt/etc/ssh/sshd_config')
-    put('sshd_config', '/mnt/etc/ssh/sshd_config.base')
-    put('dhclient-exit-hooks', '/mnt/etc/dhclient-exit-hooks', mode=0744)
     run('cp /etc/resolv.conf /mnt/etc/resolv.conf')
-    # setup pkgng
-    put('../common/make.conf', '/mnt/etc/make.conf')
     run('mkdir -p /mnt/usr/local/etc/pkg/repos')
-    put('../common/pkg.conf', '/mnt/usr/local/etc/pkg.conf')
-    put('../common/FreeBSD.conf', '/mnt/usr/local/etc/pkg/repos/FreeBSD.conf')
+    for necessary_file in necessary_files:
+        put(*necessary_file)
     # install pkg, the tarball is also used for the ezjail flavour in bootstrap_ezjail
     run('mkdir -p /mnt/var/cache/pkg/All')
     run('fetch -o /mnt/var/cache/pkg/All/pkg.txz http://pkg.freebsd.org/freebsd:9:x86:64/latest/Latest/pkg.txz')
@@ -107,32 +136,17 @@ def bootstrap(**kwargs):
     # run pkg2ng for which the shared library path needs to be updated
     run('chroot /mnt /etc/rc.d/ldconfig start')
     run('chroot /mnt pkg2ng')
-    # install some base packages
-    run('chroot /mnt pkg install ezjail python')
-    put('../common/ezjail.conf', '/mnt/usr/local/etc/ezjail.conf')
-    # remove autoboot delay
-    run('echo autoboot_delay=-1 >> /mnt/boot/loader.conf')
+    # set autoboot delay
+    autoboot_delay = env.server.config.get('bootstrap-autoboot-delay', '-1')
+    run('echo autoboot_delay=%s >> /mnt/boot/loader.conf' % autoboot_delay)
     # ssh host keys
-    if os.path.exists('ssh_host_key'):
-        put('ssh_host_key', '/mnt/etc/ssh/ssh_host_key', mode=0600)
-        put('ssh_host_key.pub', '/mnt/etc/ssh/ssh_host_key.pub', mode=0644)
-    else:
-        run("ssh-keygen -t rsa1 -b 1024 -f /mnt/etc/ssh/ssh_host_key -N ''")
-    if os.path.exists('ssh_host_rsa_key'):
-        put('ssh_host_rsa_key', '/mnt/etc/ssh/ssh_host_rsa_key', mode=0600)
-        put('ssh_host_rsa_key.pub', '/mnt/etc/ssh/ssh_host_rsa_key.pub', mode=0644)
-    else:
-        run("ssh-keygen -t rsa -f /mnt/etc/ssh/ssh_host_rsa_key -N ''")
-    if os.path.exists('ssh_host_dsa_key'):
-        put('ssh_host_dsa_key', '/mnt/etc/ssh/ssh_host_dsa_key', mode=0600)
-        put('ssh_host_dsa_key.pub', '/mnt/etc/ssh/ssh_host_dsa_key.pub', mode=0644)
-    else:
-        run("ssh-keygen -t dsa -f /mnt/etc/ssh/ssh_host_dsa_key -N ''")
-    if os.path.exists('ssh_host_ecdsa_key'):
-        put('ssh_host_ecdsa_key', '/mnt/etc/ssh/ssh_host_ecdsa_key', mode=0600)
-        put('ssh_host_ecdsa_key.pub', '/mnt/etc/ssh/ssh_host_ecdsa_key.pub', mode=0644)
-    else:
-        run("ssh-keygen -t ecdsa -f /mnt/etc/ssh/ssh_host_ecdsa_key -N ''")
+    for ssh_key, ssh_keygen_args in ssh_keys:
+        if os.path.exists(ssh_key):
+            pub_key = '%s.pub' % ssh_key
+            put(ssh_key, '/mnt/etc/ssh/%s' % ssh_key, mode=0600)
+            put(pub_key, '/mnt/etc/ssh/%s' % pub_key, mode=0644)
+        else:
+            run("ssh-keygen %s -f /mnt/etc/ssh/%s -N ''" % (ssh_keygen_args, ssh_key))
     fingerprint = run("ssh-keygen -lf /mnt/etc/ssh/ssh_host_rsa_key")
     # reboot
     with settings(hide('warnings'), warn_only=True):

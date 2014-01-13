@@ -1,6 +1,7 @@
 /.installed.cfg
 /.mr.developer.cfg
 /bin/
+/deployment/roles/common/files/identity.pub
 /deployment/zfsinstall/
 /develop-eggs/
 /downloads/
