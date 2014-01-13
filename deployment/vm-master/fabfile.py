@@ -59,18 +59,21 @@ def bootstrap(**kwargs):
     swap_size = env.server.config.get('bootstrap-swap-size', '%iM' % (realmem * 2))
     if swap_size:
         swap_arg = '-s %s' % swap_size
+    system_pool_arg = ''
     system_pool_size = env.server.config.get('bootstrap-system-pool-size', '20G')
+    if system_pool_size:
+        system_pool_arg = '-z %s' % system_pool_size
     run('destroygeom {devices_args} -p {system_pool_name} -p {data_pool_name}'.format(
         devices_args=devices_args,
         system_pool_name=system_pool_name,
         data_pool_name=data_pool_name))
-    run('{zfsinstall} {devices_args} -p {system_pool_name} -V 28 -u {bsd_url} {swap_arg} -z {system_pool_size}'.format(
+    run('{zfsinstall} {devices_args} -p {system_pool_name} -V 28 -u {bsd_url} {swap_arg} {system_pool_arg}'.format(
         zfsinstall=zfsinstall,
         devices_args=devices_args,
         system_pool_name=system_pool_name,
         bsd_url=bsd_url,
         swap_arg=swap_arg,
-        system_pool_size=system_pool_size))
+        system_pool_arg=system_pool_arg))
     # create partitions for data pool
     for device in devices:
         run('gpart add -t freebsd-zfs -l {data_pool_name}_{device} {device}'.format(
