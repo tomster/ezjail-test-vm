@@ -35,7 +35,12 @@ def bootstrap(**kwargs):
     if not bsd_url:
         print "Found no BSD system to install, please specify bootstrap-bsd-url"
         return
-    devices = set(sysctl_devices) - set([cd_device, usb_device])
+    install_devices = [cd_device, usb_device]
+    devices = set(sysctl_devices)
+    for sysctl_device in sysctl_devices:
+        for install_device in install_devices:
+            if install_device.startswith(sysctl_device):
+                devices.remove(sysctl_device)
     devices = env.server.config.get('bootstrap-system-devices', ' '.join(devices)).split()
     print "Found the following disk devices on the system:\n    %s" % ' '.join(sysctl_devices)
     if not yesno("Continuing will destroy the existing data on the following devices:\n%s\nContinue?" % ' '.join(devices)):
