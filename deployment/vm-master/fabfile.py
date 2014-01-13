@@ -22,7 +22,7 @@ def bootstrap(**kwargs):
         sysctl_devices = run('sysctl -n kern.disks').strip().split()
         realmem = run('sysctl -n hw.realmem').strip()
         realmem = float(realmem) / 1024 / 1024
-        realmem = 2 ** int(math.ceil(math.log(realmem)))
+        realmem = 2 ** int(math.ceil(math.log(realmem, 2)))
     cd_device = env.server.config.get('bootstrap-cd-device', 'cd0')
     if '/dev/{dev} on /rw/cdrom'.format(dev=cd_device) not in mounts:
         run('test -e /dev/{dev} && mount_cd9660 /dev/{dev} /cdrom || true'.format(dev=cd_device))
