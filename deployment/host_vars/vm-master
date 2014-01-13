@@ -1,0 +1,3 @@
+jails_dir: /usr/jails
+jails_zfs_root: tank/jails
+zfs_checksum: fletcher4

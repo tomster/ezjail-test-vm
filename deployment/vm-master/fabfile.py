@@ -136,6 +136,9 @@ def bootstrap(**kwargs):
     # run pkg2ng for which the shared library path needs to be updated
     run('chroot /mnt /etc/rc.d/ldconfig start')
     run('chroot /mnt pkg2ng')
+    # we need to install python here, because there is no way to install it via
+    # ansible playbooks
+    run('chroot /mnt pkg install python27')
     # set autoboot delay
     autoboot_delay = env.server.config.get('bootstrap-autoboot-delay', '-1')
     run('echo autoboot_delay=%s >> /mnt/boot/loader.conf' % autoboot_delay)
@@ -214,25 +217,25 @@ def bootstrap_ezjail():
         run('zpool import {data_pool_name}'.format(data_pool_name=data_pool_name))
     # add jails filesystem and ezjail.conf
     with settings(hide('warnings'), warn_only=True):
-        result = run('zfs list -H /var/jails')
+        result = run('zfs list -H /usr/jails')
     if result.return_code != 0:
-        run('zfs create -o mountpoint=/var/jails {data_pool_name}/jails'.format(data_pool_name=data_pool_name))
+        run('zfs create -o mountpoint=/usr/jails {data_pool_name}/jails'.format(data_pool_name=data_pool_name))
     with settings(hide('warnings'), warn_only=True):
-        result = run('test -e /var/jails/basejail')
+        result = run('test -e /usr/jails/basejail')
     if result.return_code != 0:
         run('ezjail-admin install')
-    run('rm -rf /var/jails/flavours/base')
-    run('mkdir -p /var/jails/flavours/base/etc/ssh')
-    run('mkdir -p /var/jails/flavours/base/root/.ssh')
-    run('chmod 0600 /var/jails/flavours/base/root/.ssh')
-    run('cp /etc/resolv.conf /var/jails/flavours/base/etc/resolv.conf')
-    put('../common/make.conf', '/var/jails/flavours/base/etc/make.conf')
-    run('mkdir -p /var/jails/flavours/base/usr/local/etc/pkg/repos')
-    put('../common/pkg.conf', '/var/jails/flavours/base/usr/local/etc/pkg.conf')
-    put('../common/FreeBSD.conf', '/var/jails/flavours/base/usr/local/etc/pkg/repos/FreeBSD.conf')
-    run("tar -x -C /var/jails/flavours/base --chroot --exclude '+*' -f /var/cache/pkg/All/pkg.txz")
-    run('echo sshd_enable=\\"YES\\" >> /var/jails/flavours/base/etc/rc.conf')
-    run('echo PermitRootLogin without-password >> /var/jails/flavours/base/etc/ssh/sshd_config')
-    run('echo Subsystem sftp /usr/libexec/sftp-server >> /var/jails/flavours/base/etc/ssh/sshd_config')
-    run('cp /root/.ssh/authorized_keys /var/jails/flavours/base/root/.ssh/authorized_keys')
-    run(u'echo Gehe nicht über Los. > /var/jails/flavours/base/etc/motd'.encode('utf-8'))
+    run('rm -rf /usr/jails/flavours/base')
+    run('mkdir -p /usr/jails/flavours/base/etc/ssh')
+    run('mkdir -p /usr/jails/flavours/base/root/.ssh')
+    run('chmod 0600 /usr/jails/flavours/base/root/.ssh')
+    run('cp /etc/resolv.conf /usr/jails/flavours/base/etc/resolv.conf')
+    put('../roles/common/files/make.conf', '/usr/jails/flavours/base/etc/make.conf')
+    run('mkdir -p /usr/jails/flavours/base/usr/local/etc/pkg/repos')
+    put('../roles/common/files/pkg.conf', '/usr/jails/flavours/base/usr/local/etc/pkg.conf')
+    put('../roles/common/files/FreeBSD.conf', '/usr/jails/flavours/base/usr/local/etc/pkg/repos/FreeBSD.conf')
+    run("tar -x -C /usr/jails/flavours/base --chroot --exclude '+*' -f /var/cache/pkg/All/pkg.txz")
+    run('echo sshd_enable=\\"YES\\" >> /usr/jails/flavours/base/etc/rc.conf')
+    run('echo PermitRootLogin without-password >> /usr/jails/flavours/base/etc/ssh/sshd_config')
+    run('echo Subsystem sftp /usr/libexec/sftp-server >> /usr/jails/flavours/base/etc/ssh/sshd_config')
+    run('cp /root/.ssh/authorized_keys /usr/jails/flavours/base/root/.ssh/authorized_keys')
+    run(u'echo Gehe nicht über Los. > /usr/jails/flavours/base/etc/motd'.encode('utf-8'))

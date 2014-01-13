@@ -1,0 +1,1 @@
+map {{ ansible_default_ipv4.interface }} 10.0.0.0/8 -> 0/32

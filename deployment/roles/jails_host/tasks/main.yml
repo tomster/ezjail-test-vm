@@ -1,0 +1,69 @@
+---
+- name: bind host sshd to primary ip
+  lineinfile: dest=/etc/ssh/sshd_config regexp=^ListenAddress line='ListenAddress {{ ansible_default_ipv4.address }}'
+  notify: restart sshd
+
+- name: Enable ipfilter in rc.conf
+  lineinfile: dest=/etc/rc.conf regexp=^ipfilter_enable= line=ipfilter_enable=\"YES\"
+  notify: restart network
+- name: Set ipfilter_rules in rc.conf
+  lineinfile: dest=/etc/rc.conf regexp=^ipfilter_rules= line=ipfilter_rules=\"/etc/ipf.rules\"
+  notify: restart network
+- name: Setup ipf.rules
+  template: src=ipf.rules dest=/etc/ipf.rules
+  notify: restart network
+
+- name: Enable ipmon in rc.conf
+  lineinfile: dest=/etc/rc.conf regexp=^ipmon_enable= line=ipmon_enable=\"YES\"
+  notify: restart network
+- name: Set ipmon_flags in rc.conf
+  lineinfile: dest=/etc/rc.conf regexp=^ipmon_flags= line=ipmon_flags=\"-Ds\"
+  notify: restart network
+
+- name: Enable ipnat in rc.conf
+  lineinfile: dest=/etc/rc.conf regexp=^ipnat_enable= line=ipnat_enable=\"YES\"
+  notify: restart network
+- name: Set ipnat_rules in rc.conf
+  lineinfile: dest=/etc/rc.conf regexp=^ipnat_rules= line=ipnat_rules=\"/etc/ipnat.rules\"
+  notify: restart network
+- name: Setup ipnat.rules
+  template: src=ipnat.rules dest=/etc/ipnat.rules
+  notify: restart network
+
+- name: Enable gateway in rc.conf
+  lineinfile: dest=/etc/rc.conf regexp=^gateway_enable= line=gateway_enable=\"YES\"
+  notify: restart network
+
+- name: Add lo1 to rc.conf
+  lineinfile: dest=/etc/rc.conf regexp=^cloned_interfaces= line=cloned_interfaces=\"lo1\"
+  notify: restart network
+
+- name: Enable allow_raw_sockets
+  sysctl: name=security.jail.allow_raw_sockets value=1 state=present
+- name: Enable sysvipc_allowed
+  sysctl: name=security.jail.sysvipc_allowed value=1 state=present
+
+- name: Ensure helper packages are installed
+  pkgng: name={{ item }} state=present
+  with_items:
+  - ezjail
+  - sudo
+  - screen
+  - bash
+
+- name: Set default jail interface
+  lineinfile: dest=/etc/rc.conf regexp=^jail_interface= line=jail_interface=\"lo1\"
+  notify: restart ezjail
+- name: Set default jail parameters
+  lineinfile: dest=/etc/rc.conf regexp=^jail_parameters= line=jail_parameters=\"allow.raw_sockets=1\ allow.sysvipc=1\"
+  notify: restart ezjail
+- name: Set default jail exec stop
+  lineinfile: dest=/etc/rc.conf regexp=^jail_exec_stop= line=jail_exec_stop=\"/bin/sh\ /etc/rc.shutdown\"
+  notify: restart ezjail
+
+- name: Enable ezjail in rc.conf
+  lineinfile: dest=/etc/rc.conf regexp=^ezjail_enable= line=ezjail_enable=\"YES\"
+  notify: restart ezjail
+- name: Setup ezjail.conf
+  template: src=ezjail.conf dest=/usr/local/etc/ezjail.conf
+  notify: restart ezjail
