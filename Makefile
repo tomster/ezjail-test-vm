@@ -94,6 +94,8 @@ destroyvm:
 
 
 clean: destroyvm
-	rm -rf bin lib include share vm
-	git clean -dxxf src
+	rm -rf bin lib include share
 
+
+dist-clean: clean
+	git clean -dxxf src
