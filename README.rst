@@ -1,6 +1,6 @@
 You need `VirtualBox <https://www.virtualbox.org>`_ with the command line tools available in your path.
 
-- Place your public ssh key in ``deployment/common/authorized_keys``
+- Place your public ssh key in ``deployment/roles/common/files/identity.pub``
 - ``make startvm``
 - wait till the login prompt
 - ``make bootstrapvm``
