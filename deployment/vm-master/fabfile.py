@@ -1,6 +1,7 @@
 # coding: utf-8
 from fabric.api import env, put, run, settings, hide
 from mr.awsome.ezjail.fabric import bootstrap
+import sys
 
 # shutup pyflakes
 (bootstrap, )
@@ -20,6 +21,14 @@ def bootstrap_ezjail():
     if result.return_code != 0:
         devices = run("find /dev/gpt/ -name '{data_pool_name}_*' \\! -name '*.eli' -exec basename {{}} \\;".format(
             data_pool_name=data_pool_name)).strip().split()
+        if len(devices) == 1:
+            raid_mode = ''
+        elif len(devices) == 2:
+            raid_mode = 'mirror'
+            print "Automatically selected mirror mode for two devices."
+        else:
+            print "Don't know how to handle %s number of devices (%s)." % (len(devices), ' '.join(devices))
+            sys.exit(1)
         if geli:
             data_devices = []
             rc_geli_devices = []
@@ -56,8 +65,9 @@ def bootstrap_ezjail():
                 data_device = '{device}.nop'.format(
                     device=device)
                 data_devices.append(data_device)
-        run('zpool create -o version=28 -m none {data_pool_name} {data_devices}'.format(
+        run('zpool create -o version=28 -m none {data_pool_name} {raid_mode} {data_devices}'.format(
             data_pool_name=data_pool_name,
+            raid_mode=raid_mode,
             data_devices=' '.join(data_devices)))
         run('zfs set atime=off {data_pool_name}'.format(data_pool_name=data_pool_name))
         run('zfs set checksum=fletcher4 {data_pool_name}'.format(data_pool_name=data_pool_name))
