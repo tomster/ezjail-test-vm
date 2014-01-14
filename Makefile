@@ -91,3 +91,8 @@ bootstrapvm: .installed.cfg
 destroyvm:
 	-VBoxManage controlvm $(VM_NAME) poweroff && sleep 2
 	VBoxManage unregistervm $(VM_NAME) --delete
+
+clean: destroyvm
+	rm -rf bin lib include share vm
+	git clean -dxxf src
+
