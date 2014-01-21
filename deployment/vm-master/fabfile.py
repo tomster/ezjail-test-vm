@@ -19,8 +19,12 @@ def bootstrap_ezjail():
         result = run('zpool list -H {data_pool_name}'.format(
             data_pool_name=data_pool_name))
     if result.return_code != 0:
-        devices = run("find /dev/gpt/ -name '{data_pool_name}_*' \\! -name '*.eli' -exec basename {{}} \\;".format(
-            data_pool_name=data_pool_name)).strip().split()
+        devices = env.server.config.get('bootstrap-data-pool-devices', None)
+        if devices is None:
+            devices = run("find /dev/gpt/ -name '{data_pool_name}_*' \\! -name '*.eli' -exec basename {{}} \\;".format(
+                data_pool_name=data_pool_name)).strip().split()
+        else:
+            devices = devices.split()
         if len(devices) == 1:
             raid_mode = ''
         elif len(devices) == 2:
