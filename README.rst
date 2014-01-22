@@ -6,7 +6,6 @@ You need `VirtualBox <https://www.virtualbox.org>`_ with the command line tools 
 - ``make bootstrapvm``
 - answer ``y`` for the questions coming up
 - after reboot run ``/bin/aws playbook deployment/vm-master.yml``
-- then ``./bin/aws do vm-master bootstrap_ezjail``
 - ``./bin/aws start test``
 - ``./bin/assh test`` (this might fail the first time, try again)
 - ???
