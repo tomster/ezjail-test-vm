@@ -1,0 +1,20 @@
+---
+- name: Data ZFS file system
+  zfs:
+    name="{{ awsome_bootstrap_data_pool_name | default('tank') }}/data"
+    state=present
+    mountpoint=/data
+- name: Shared data ZFS file system
+  zfs:
+    name="{{ awsome_bootstrap_data_pool_name | default('tank') }}/data/shared"
+    state=present
+    exec = off
+    setuid = off
+- name: Jails persistent data ZFS file system
+  zfs:
+    name="{{ awsome_bootstrap_data_pool_name | default('tank') }}/data/jails"
+    state=present
+- name: Backed up production data ZFS file system
+  zfs:
+    name="{{ awsome_bootstrap_data_pool_name | default('tank') }}/data/production"
+    state=present
