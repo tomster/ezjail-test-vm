@@ -79,6 +79,7 @@
 - name: Setup rc.conf lines for data zpool
   lineinfile: dest=/etc/rc.conf regexp={{ item.regexp }} line={{ item.line }}
   with_items: data_pool_result.rc_lines
+  when: data_pool_result.rc_lines|default()
 
 - name: Set data zpool options
   zfs:
@@ -126,7 +127,7 @@
 - name: copy some settings from host to base flavour
   shell: cmp -s {{ item.src }} {{ item.dest }} || cp -v {{ item.src }} {{ item.dest }}
   register: _cp_settings_result
-  changed_when: _cp_settings_result.stdout != ''
+  changed_when: _cp_settings_result.stdout|default() != ''
   with_items:
     - { src: "/etc/resolv.conf", dest: "/usr/jails/flavours/base/etc/resolv.conf" }
     - { src: "/root/.ssh/authorized_keys", dest: "/usr/jails/flavours/base/root/.ssh/authorized_keys" }
