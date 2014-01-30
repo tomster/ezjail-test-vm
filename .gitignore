@@ -3,6 +3,7 @@
 /bin/
 /deployment/roles/common/files/identity.pub
 /deployment/zfsinstall/
+/deployment/zfs_snap_backup/
 /develop-eggs/
 /downloads/
 /etc/known_hosts

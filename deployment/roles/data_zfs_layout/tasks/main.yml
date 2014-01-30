@@ -8,8 +8,8 @@
   zfs:
     name="{{ awsome_bootstrap_data_pool_name | default('tank') }}/data/shared"
     state=present
-    exec = off
-    setuid = off
+    exec=off
+    setuid=off
 - name: Jails persistent data ZFS file system
   zfs:
     name="{{ awsome_bootstrap_data_pool_name | default('tank') }}/data/jails"
@@ -18,3 +18,4 @@
   zfs:
     name="{{ awsome_bootstrap_data_pool_name | default('tank') }}/data/production"
     state=present
+- command: zfs set com.sun:auto-snapshot=true tank/data/production
