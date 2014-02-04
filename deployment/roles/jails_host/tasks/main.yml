@@ -113,10 +113,10 @@
 - name: The etc/ssh directory in base flavour
   file: dest=/usr/jails/flavours/base/etc/ssh state=directory owner=root group=wheel
 
-- copy: src=./roles/common/files/make.conf dest=/usr/jails/flavours/base/etc/make.conf owner=root group=wheel
+- copy: src=./vm-master/make.conf dest=/usr/jails/flavours/base/etc/make.conf owner=root group=wheel
 - file: dest=/usr/jails/flavours/base/usr/local/etc/pkg/repos state=directory owner=root group=wheel
-- copy: src=./roles/common/files/pkg.conf dest=/usr/jails/flavours/base/usr/local/etc/pkg.conf owner=root group=wheel
-- copy: src=./roles/common/files/FreeBSD.conf dest=/usr/jails/flavours/base/usr/local/etc/pkg/repos/FreeBSD.conf owner=root group=wheel
+- copy: src=./vm-master/pkg.conf dest=/usr/jails/flavours/base/usr/local/etc/pkg.conf owner=root group=wheel
+- copy: src=./vm-master/FreeBSD.conf dest=/usr/jails/flavours/base/usr/local/etc/pkg/repos/FreeBSD.conf owner=root group=wheel
 
 - name: rc.conf for base flavour
   copy: src=base_flavour_rc.conf dest=/usr/jails/flavours/base/etc/rc.conf owner=root group=wheel
