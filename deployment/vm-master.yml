@@ -2,7 +2,6 @@
 - hosts: vm-master
   user: root
   roles:
-    - common
     - dhcp_host
     - jails_host
     - data_zfs_layout
