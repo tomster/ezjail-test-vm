@@ -9,6 +9,7 @@
 /etc/known_hosts
 /include/
 /lib/
+/provisioning/
 /share/
 /src/mr.awsome*
 /vm/
