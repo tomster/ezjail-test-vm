@@ -1,5 +1,11 @@
-VIRTUALENV = virtualenv --system-site-packages
+PYTHON = python2.7
 PYTHON_TARGETS = bin/python lib/python* include/python*
+
+VIRTUALENV_URL = https://pypi.python.org/packages/py2.py3/v/virtualenv/virtualenv-1.11.2-py2.py3-none-any.whl
+VIRTUALENV_MD5 = a18326dc067b528cfd2b3fce495d540d
+VIRTUALENV_FILENAME = $(lastword $(subst /, ,$(VIRTUALENV_URL)))
+VIRTUALENV_PATH = downloads/$(VIRTUALENV_FILENAME)
+VIRTUALENV = $(PYTHON) virtualenv/virtualenv.py
 
 MFSBSD_URL = http://mfsbsd.vx.sk/files/iso/9/amd64/mfsbsd-se-9.2-RELEASE-amd64.iso
 MFSBSD_FILENAME = $(lastword $(subst /, ,$(MFSBSD_URL)))
@@ -14,15 +20,39 @@ VM_BOOT_DISK = $(VM_PATH)/boot.vdi
 
 all: .installed.cfg
 
+.SUFFIXES:
 
-$(PYTHON_TARGETS):
+.SECONDARY: virtualenv/virtualenv.py
+
+.INTERMEDIATE: check_virtualenv_download \
+	python
+	check_mfsbsd_download mfsbsd_download
+
+.PHONY: all \
+	vm startvm stopvm bootstrapvm destroyvm \
+	clean dist-clean
+
+
+downloads:
+	mkdir -p downloads
+
+
+check_virtualenv_download:
+	@test "`md5 -q $(VIRTUALENV_PATH)`" = "$(VIRTUALENV_MD5)" || rm -f $(VIRTUALENV_PATH)
+
+$(VIRTUALENV_PATH): downloads
+	wget -c "$(VIRTUALENV_URL)" -O $(VIRTUALENV_PATH)
+
+virtualenv/virtualenv.py: check_virtualenv_download $(VIRTUALENV_PATH)
+	$(PYTHON) -m zipfile -e $(VIRTUALENV_PATH) virtualenv
+
 
 $(PYTHON_TARGETS): python
 
-.SECONDARY: python
-python:
+python: virtualenv/virtualenv.py
 	$(VIRTUALENV) --clear .
 	-./clear-setuptools-dependency-links
+	touch $(PYTHON_TARGETS)
 
 
 bin/ansible: $(PYTHON_TARGETS)
@@ -41,17 +71,11 @@ bin/buildout: $(PYTHON_TARGETS) bin/ansible
 
 
 check_mfsbsd_download:
-	@test "`md5 -q $(MFSBSD_PATH)`" = "660d2b65e55a982c071891b7996fe684" || rm -f $(MFSBSD_PATH)
-
-
-downloads:
-	mkdir -p downloads
-
+	@test "`md5 -q $(MFSBSD_PATH)`" = "$(MFSBSD_MD5)" || rm -f $(MFSBSD_PATH)
 
 $(MFSBSD_PATH): downloads
 	wget -c "$(MFSBSD_URL)" -O $(MFSBSD_PATH)
 	touch $(MFSBSD_PATH)
-
 
 mfsbsd_download: check_mfsbsd_download $(MFSBSD_PATH)
 
