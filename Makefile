@@ -109,7 +109,7 @@ stopvm:
 
 
 bootstrapvm: .installed.cfg
-	./bin/aws do vm-master bootstrap
+	./bin/ploy do vm-master bootstrap
 
 
 destroyvm:
