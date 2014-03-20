@@ -1,0 +1,5 @@
+---
+wwwuser: www
+fqdn: localhost
+wwwdata: /var/www/default
+greeting: stranger

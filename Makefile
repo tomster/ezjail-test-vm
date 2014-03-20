@@ -13,7 +13,7 @@ MFSBSD_PATH = downloads/$(MFSBSD_FILENAME)
 MFSBSD_MD5 = 660d2b65e55a982c071891b7996fe684
 
 VM_BASEFOLDER = $(abspath vm)
-VM_NAME = freebsd-test-dummy
+VM_NAME = ezjail-test-vm
 VM_PATH = $(VM_BASEFOLDER)/$(VM_NAME)
 VM_VBOX = $(VM_PATH)/$(VM_NAME).vbox
 VM_BOOT_DISK = $(VM_PATH)/boot.vdi
@@ -94,7 +94,7 @@ $(VM_VBOX): $(VM_BOOT_DISK)
 	VBoxManage storagectl $(VM_NAME) --name "SATA" --add sata
 	VBoxManage storageattach $(VM_NAME) --storagectl "SATA" --type dvddrive --port 0 --medium $(MFSBSD_PATH)
 	VBoxManage storageattach $(VM_NAME) --storagectl "SATA" --type hdd --port 1 --medium $(VM_BOOT_DISK)
-	VBoxManage modifyvm $(VM_NAME) --natpf1 "ssh,tcp,,47022,,22"
+	VBoxManage modifyvm $(VM_NAME) --natpf1 "ssh,tcp,,47022,,22" --natpf2 "http,tcp,,47023,,80"
 
 
 vm: mfsbsd_download $(VM_VBOX)
