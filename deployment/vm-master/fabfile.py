@@ -1,9 +1,9 @@
 # coding: utf-8
 from fabric.api import env
-from bsdploy.fabric import bootstrap
+from bsdploy.fabric import bootstrap, fetch_assets
 
 # shutup pyflakes
-(bootstrap, )
+(bootstrap, fetch_assets)
 
 
 env.shell = '/bin/sh -c'
