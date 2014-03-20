@@ -108,10 +108,6 @@ stopvm:
 	VBoxManage controlvm $(VM_NAME) acpipowerbutton
 
 
-bootstrapvm: .installed.cfg
-	./bin/ploy do vm-master bootstrap
-
-
 destroyvm:
 	-VBoxManage controlvm $(VM_NAME) poweroff && sleep 2
 	-VBoxManage unregistervm $(VM_NAME) --delete
