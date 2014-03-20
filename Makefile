@@ -51,7 +51,7 @@ $(PYTHON_TARGETS): python
 
 python: virtualenv/virtualenv.py
 	$(VIRTUALENV) --clear .
-	-./clear-setuptools-dependency-links
+	-./bin/clear-setuptools-dependency-links
 	touch $(PYTHON_TARGETS)
 
 
@@ -63,7 +63,7 @@ bin/ansible: $(PYTHON_TARGETS)
 bin/buildout: $(PYTHON_TARGETS) bin/ansible
 	bin/pip install --upgrade --force-reinstall zc.buildout
 	touch bin/buildout
-	-./clear-setuptools-dependency-links
+	-./bin/clear-setuptools-dependency-links
 
 
 .installed.cfg: bin/buildout buildout.cfg src/*/setup.py
