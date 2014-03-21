@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# PROVIDE: btsync
+# REQUIRE: LOGIN DAEMON NETWORKING
+# KEYWORD: shutdown
+#
+# To enable BTSync, add this line to your /etc/rc.conf:
+#
+# btsync_enable="YES"
+#
+# And optionally these line:
+#
+# btsync_user="username" # Default is "root"
+# btsync_bin="/path/to/btsync" # Default is "/usr/local/sbin/btsync"
+
+. /etc/rc.subr
+
+name="btsync"
+rcvar="btsync_enable"
+
+load_rc_config $name
+
+required_files=$btsync_bin
+
+: ${btsync_enable="NO"}
+: ${btsync_user="root"}
+: ${btsync_bin="/usr/local/sbin/btsync"}
+: ${btsync_config="/usr/local/etc/btsync.conf"}
+
+command=$btsync_bin
+command_args="--config ${btsync_config}"
+
+run_rc_command "$1"

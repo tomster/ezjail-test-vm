@@ -1,0 +1,28 @@
+---
+- name: create application user
+  user: name={{btsync_user}} createhome=no
+
+- name: ensure the tahoe db directory exists
+  file: path={{btsync_data_path}} state=directory owner={{btsync_user}} mode=700
+
+- name: ensure the tahoe db directory exists
+  file: path={{btsync_storage_path}} state=directory owner={{btsync_user}} mode=700
+
+- name: upload the rc.d script
+  copy: src=btsync dest=/usr/local/etc/rc.d/btsync owner={{btsync_user}} mode=550
+
+- name: upload the binary
+  copy: src=btsync_freebsd_x64/btsync dest=/usr/local/sbin/btsync owner={{btsync_user}} mode=550
+
+- name: configure btsync
+  template: src=btsync.conf dest=/usr/local/etc/btsync.conf owner={{btsync_user}} mode=660
+
+- name: enable btsync at startup time
+  lineinfile: dest=/etc/rc.conf state=present line='btsync_enable=YES' create=yes
+
+- name: set bt user
+  lineinfile: dest=/etc/rc.conf state=present line='btsync_user={{btsync_user}}' create=no
+
+- name: make sure btsync is running or reloaded
+  service: name=btsync state=restarted
+

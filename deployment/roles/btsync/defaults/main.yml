@@ -1,0 +1,8 @@
+---
+btsync_user: btsync
+btsync_data_path: /var/btsync-data
+btsync_storage_path: /var/btsync-db
+btsync_listening_port: 8887
+btsync_webui_port: 8888
+btsync_device_name: btsync-ezjail
+btsync_webui_name: admin

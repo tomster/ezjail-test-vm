@@ -5,3 +5,6 @@ pkg_txz_url: http://pkg.freebsd.org/freebsd:9:x86:64/latest/Latest/pkg.txz
 ipnat_rules:
     - "# https forward for webserver:"
     - "rdr {{ ansible_default_ipv4.interface }} {{ ansible_default_ipv4.address }}/32 port 80 -> {{ hostvars['webserver']['awsome_ip'] }} port 80"
+    - "# forwards for btsync:"
+    - "rdr {{ ansible_default_ipv4.interface }} {{ ansible_default_ipv4.address }}/32 port 6667 -> {{ hostvars['btsync']['awsome_ip'] }} port 6667"
+    - "rdr {{ ansible_default_ipv4.interface }} {{ ansible_default_ipv4.address }}/32 port 6668 -> {{ hostvars['btsync']['awsome_ip'] }} port 6668"
