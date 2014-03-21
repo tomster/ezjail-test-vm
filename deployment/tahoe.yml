@@ -1,0 +1,5 @@
+---
+- hosts: tahoe
+  user: root
+  roles:
+    - tahoe-lafs
