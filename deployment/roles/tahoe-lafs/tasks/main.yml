@@ -6,8 +6,7 @@
   - py27-virtualenv
 
 - name: create application user
-  # this creates /home/pyramid/.ssh/id_rsa{.pub}
-  user: name={{tahoeuser}} createhome=yes generate_ssh_key=yes
+  user: name={{tahoeuser}} createhome=no
 
 - name: ensure the tahoe data directory exists
   file: path={{tahoedata}} state=directory owner={{tahoeuser}} mode=770
@@ -18,20 +17,11 @@
 - name: download the tahoe-package
   get_url: dest=/usr/local/tahoe-build/ url=https://tahoe-lafs.org/source/tahoe-lafs/releases/allmydata-tahoe-1.10.0.zip validate_certs=no
 
+- name: unpack the archive
+	command: unzip /usr/local/tahoe-build/allmydata-tahoe-1.10.0.zip
 
-# - name: configure nginx
-#   template: src=nginx.conf dest=/usr/local/etc/nginx/nginx.conf
+- name: build tahoe (this will take a while...)
+	command: python2.7 /usr/local/tahoe-build/allmydata-tahoe-1.10.0/setup.py build
 
-# - name: ensure the www data directory exists
-#   file: path={{wwwdata}} state=directory owner={{wwwuser}} mode=770
-
-# - name: upload the website
-#   template: src=index.html dest={{wwwdata}}/index.html owner={{wwwuser}} mode=550
-
-# - name: enable nginx at startup time
-#   lineinfile: dest=/etc/rc.conf state=present line='nginx_enable=YES' create=yes
-
-# - name: make sure nginx is running or reloaded
-#   service: name=nginx state=restarted
-
-# https://tahoe-lafs.org/source/tahoe-lafs/releases/allmydata-tahoe-1.10.0.zip
+- name: install the binary
+	command: mv /usr/local/tahoe-build/allmydata-tahoe-1.10.0/bin/tahoe /usr/local/bin/
