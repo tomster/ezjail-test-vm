@@ -2,10 +2,10 @@
 - name: create application user
   user: name={{btsync_user}} createhome=no
 
-- name: ensure the tahoe db directory exists
+- name: create a data directory that can be published via the web UI
   file: path={{btsync_data_path}} state=directory owner={{btsync_user}} mode=700
 
-- name: ensure the tahoe db directory exists
+- name: ensure a directory for btsync to store its database exists
   file: path={{btsync_storage_path}} state=directory owner={{btsync_user}} mode=700
 
 - name: upload the rc.d script
@@ -20,7 +20,7 @@
 - name: enable btsync at startup time
   lineinfile: dest=/etc/rc.conf state=present line='btsync_enable=YES' create=yes
 
-- name: set bt user
+- name: set the btsync user
   lineinfile: dest=/etc/rc.conf state=present line='btsync_user={{btsync_user}}' create=no
 
 - name: make sure btsync is running or reloaded
