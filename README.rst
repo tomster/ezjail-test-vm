@@ -1,4 +1,12 @@
-You need `VirtualBox <https://www.virtualbox.org>`_ with the command line tools available in your path.
+Requirements
+============
+
+BSDploy is currently still in development. This means that for now you will need ``git``, ``python`` and ``virtualenv`` to install it.
+
+This example uses `VirtualBox <https://www.virtualbox.org>`_ and assumes that that is already installed and its command line tools are available in your path.
+
+Running the example
+===================
 
 - run ``make``
 - If your SSH public key is *not* in ``~/.ssh/identity.pub``, copy it to ``etc/authorized_keys``
