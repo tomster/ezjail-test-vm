@@ -91,7 +91,7 @@ $(VM_VBOX): $(VM_BOOT_DISK)
 	VBoxManage storagectl $(VM_NAME) --name "SATA" --add sata
 	VBoxManage storageattach $(VM_NAME) --storagectl "SATA" --type dvddrive --port 0 --medium $(MFSBSD_PATH)
 	VBoxManage storageattach $(VM_NAME) --storagectl "SATA" --type hdd --port 1 --medium $(VM_BOOT_DISK)
-	VBoxManage modifyvm $(VM_NAME) --natpf1 "ssh,tcp,,47022,,22" --natpf2 "http,tcp,,47023,,80"
+	VBoxManage modifyvm $(VM_NAME) --natpf1 "ssh,tcp,,47022,,22" --natpf1 "http,tcp,,47023,,80"
 
 
 vm: mfsbsd_download $(VM_VBOX)
