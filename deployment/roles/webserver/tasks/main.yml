@@ -1,16 +1,14 @@
 ---
-- name: install packages
-  pkgng: name={{ item }} state=present
-  with_items:
-    - nginx
+- name: install nginx
+  pkgng: name=nginx state=present
 
 - name: configure nginx
   template: src=nginx.conf dest=/usr/local/etc/nginx/nginx.conf
 
-- name: ensure www data directory exists
+- name: ensure the www data directory exists
   file: path={{wwwdata}} state=directory owner={{wwwuser}} mode=770
 
-- name: upload spiffy website
+- name: upload the website
   template: src=index.html dest={{wwwdata}}/index.html owner={{wwwuser}} mode=550
 
 - name: enable nginx at startup time
