@@ -1,4 +1,4 @@
-This is an example of how to use `BSDploy <https://github.com/tomster/bsdploy>`_ to provision and configure a simple webserver in local VirtualBox container.
+This is an example of how to use `BSDploy <https://github.com/tomster/bsdploy>`_ to provision and configure a simple webserver using FreeBSD in a local VirtualBox container.
 
 Requirements
 ============
