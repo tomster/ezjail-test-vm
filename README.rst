@@ -1,4 +1,5 @@
-This is an example of how to use `BSDploy <https://github.com/tomster/bsdploy>`_ to provision and configure a simple webserver using FreeBSD in a local VirtualBox container.
+This is an example of how to use `BSDploy <https://github.com/tomster/bsdploy>`_ to provision and configure a FreeBSD jailhost in a local VirtualBox container and how to create various jails inside it.
+
 
 Requirements
 ============
@@ -7,20 +8,51 @@ BSDploy is currently still in development. This means that for now you will need
 
 This example uses `VirtualBox <https://www.virtualbox.org>`_ and assumes that that is already installed and its command line tools are available in your path.
 
-Running the example
-===================
+
+Creating and configuring the jail host
+======================================
 
 - Run ``make``. This will install development versions of ``BSDploy`` and its dependencies. Give it a minute :)
 - If your SSH public key is *not* in ``~/.ssh/identity.pub``, copy it to ``etc/authorized_keys``
 - Next run ``make startvm``. This will download a FreeBSD ISO image (ca. 136Mb) so you might want to give that a minute, as well :) 
-- It will boot up virtualbox from the downloaded image – wait till the login prompt appears, then...
+- It will boot up VirtualBox from the downloaded image – wait until the login prompt appears, then...
 - Run ``bin/ploy bootstrap-jailhost vm-master`` - this will install FreeBSD from the image onto the VirtualBox container
 - Answer ``y`` for the questions coming up
-  After reboot run ``bin/ploy configure-jailhost vm-master`` – this will prepare the FreeBSD installation for our use (by installing ezjail and Python etc. onto it).
-- Now you can run ``./bin/ploy start webserver`` – this will create a 'naked' jail which we then...
-- configure by running ``./bin/ploy playbook deployment/webserver.yml`` (this can randomly fail the first time, simply try again)
+- After the installation has completed the machine will automatically reboot.
+- After the machine has booted into the fresh installation, run ``bin/ploy configure-jailhost vm-master`` – this will prepare the FreeBSD installation for our use (by installing ezjail and Python etc. onto it).
 
-If all of the above succeeds, you should be able to visit `http://localhost:47023/ <http://localhost:47023/>`_ in your browser and it should display a sample web page.
+
+Install a simple web server
+===========================
+
+The first example will install a (very) minimal ``nginx`` webserver along with a 'hello world' page. The pattern ``bsdploy`` offers is to first create and start the 'naked' jail and then allows you to run an ansible playbook against it.
+
+- So, first run ``./bin/ploy start webserver``
+- Then you configure it by running ``./bin/ploy playbook deployment/webserver.yml`` (currently the SSH connection can randomly fail upon the first attempt – if this happens, simply try again)
+
+If the above succeeded, you should be able to visit `http://localhost:47023/ <http://localhost:47023/>`_ in your browser and it should display the sample web page.
+
+
+Install a Bittorrent Sync node
+==============================
+
+As a slightly less simple example let's install a `BitTorrent Sync <http://www.bittorrent.com/sync>`_ node.
+
+As before, first create the jail::
+
+	bin/ploy start btsync
+
+Then configure it by running the playbook against it like so::
+
+	bin/ploy playbook deployment/btsync.yml
+
+After the playbook has run its course you should be able to log into the ``btsync`` web interface at `http://localhost:16668 <http://localhost:16668/gui/en/index.html>`_ using the credentials from ``etc/ploy.conf`` (by default ``admin``/``admin``).
+
+Try clicking on `Add Folder <http://localhost:16668/gui/en/index.html#add-dialog>`_, select the pre-created folder inside the jail at ``/var/btsync-data`` and create a secret for it. You now should be able to connect to the node from any client.
+
+
+Clean up
+========
 
 To stop the virtual machine, run ``make stopvm``.
 To destroy the virtual machine, run ``make destroyvm``.
