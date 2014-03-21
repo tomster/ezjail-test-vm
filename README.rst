@@ -18,7 +18,7 @@ Running the example
 - ``./bin/ploy start webserver``
 - ``./bin/ploy playbook deployment/webserver.yml`` (this can randomly fail the first time, simply try again)
 
-If all of the above succeeds, you should be able to visit ``http://localhost:47023/ <http://localhost:47023/>`_ in your browser and it should display a sample web page.
+If all of the above succeeds, you should be able to visit `http://localhost:47023/ <http://localhost:47023/>`_ in your browser and it should display a sample web page.
 
 To stop the virtual machine, run ``make stopvm``.
 To destroy the virtual machine, run ``make destroyvm``.
