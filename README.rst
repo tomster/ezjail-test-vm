@@ -1,25 +1,25 @@
-This is an example of how to use `BSDploy <https://github.com/tomster/bsdploy>`_ to provision and configure a FreeBSD jailhost in a local VirtualBox container and how to create various jails inside it.
+This is an example of how to use `BSDploy`_ to provision and configure a `FreeBSD`_ jailhost in a local `VirtualBox`_ container and how to create various jails inside it.
 
 
 Requirements
 ============
 
-BSDploy is currently still in development. This means that for now you will need ``git``, ``python`` and ``virtualenv`` to install it.
+`BSDploy`_ is currently still in development. This means that for now you will need ``git``, ``python`` and ``virtualenv`` to install it.
 
-This example uses `VirtualBox <https://www.virtualbox.org>`_ and assumes that that is already installed and its command line tools are available in your path.
+This example uses `VirtualBox`_ and assumes that that is already installed and its command line tools are available in your path.
 
 
 Creating and configuring the jail host
 ======================================
 
-- Run ``make``. This will install development versions of ``BSDploy`` and its dependencies. Give it a minute :)
+- Run ``make``. This will install development versions of `BSDploy`_ and its dependencies. Give it a minute :)
 - If your SSH public key is *not* in ``~/.ssh/identity.pub``, copy it to ``etc/authorized_keys``
-- Next run ``make startvm``. This will download a FreeBSD ISO image (ca. 136Mb) so you might want to give that a minute, as well :) 
+- Next run ``make startvm``. This will download a `FreeBSD ISO image (mfsBSD)`_ (ca. 136Mb) so you might want to give that a minute, as well :) 
 - It will boot up VirtualBox from the downloaded image – wait until the login prompt appears, then...
 - Run ``bin/ploy bootstrap-jailhost vm-master`` - this will install FreeBSD from the image onto the VirtualBox container
 - Answer ``y`` for the questions coming up
 - After the installation has completed the machine will automatically reboot.
-- After the machine has booted into the fresh installation, run ``bin/ploy configure-jailhost vm-master`` – this will prepare the FreeBSD installation for our use (by installing ezjail and Python etc. onto it).
+- After the machine has booted into the fresh installation, run ``bin/ploy configure-jailhost vm-master`` – this will prepare the `FreeBSD`_ installation for our use (by installing `ezjail`_ and `Python`_ etc. onto it).
 
 
 Install a simple web server
@@ -55,4 +55,13 @@ Clean up
 ========
 
 To stop the virtual machine, run ``make stopvm``.
+
 To destroy the virtual machine, run ``make destroyvm``.
+
+
+.. _`BSDploy`: https://github.com/tomster/bsdploy
+.. _`FreeBSD`: http://freebsd.org
+.. _`VirtualBox`: https://www.virtualbox.org
+.. _`FreeBSD ISO image (mfsBSD)`: http://mfsbsd.vx.sk
+.. _`ezjail`: http://erdgeist.org/arts/software/ezjail/
+.. _`Python`: http://www.python.org
