@@ -47,11 +47,10 @@ bin/buildout: $(PYTHON_TARGETS) bin/ansible
 .installed.cfg: bin/buildout buildout.cfg src/*/setup.py
 	bin/buildout -v
 
-check_mfsbsd_download:
-	echo "$(MFSBSD_SHA)  $(MFSBSD_PATH)" | shasum -c || rm -f $(MFSBSD_PATH)
+check_mfsbsd_download: bin/python
+	bin/python bin/download.py "$(MFSBSD_URL)" $(MFSBSD_SHA) "$(MFSBSD_PATH)"
 
 $(MFSBSD_PATH): downloads
-	wget -c "$(MFSBSD_URL)" -O $(MFSBSD_PATH)
 	touch $(MFSBSD_PATH)
 
 mfsbsd_download: check_mfsbsd_download $(MFSBSD_PATH)
