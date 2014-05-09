@@ -34,17 +34,11 @@ python:
 	$(VIRTUALENV) --clear .
 
 
-bin/ansible: $(PYTHON_TARGETS)
-	bin/pip install --upgrade --force-reinstall ansible==1.5.5
-	touch bin/ansible
-
-
 bin/buildout: $(PYTHON_TARGETS) bin/ansible
-	bin/pip install --upgrade --force-reinstall zc.buildout
-	touch bin/buildout
+	bin/pip install -r requirements.txt
 
 
-.installed.cfg: bin/buildout buildout.cfg src/*/setup.py
+develop .installed.cfg: bin/buildout buildout.cfg src/*/setup.py
 	bin/buildout -v
 
 check_mfsbsd_download: bin/python

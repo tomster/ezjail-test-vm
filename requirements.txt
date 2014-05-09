@@ -1,0 +1,15 @@
+Jinja2==2.7.2
+MarkupSafe==0.23
+PyYAML==3.11
+ansible==1.5.5
+ecdsa==0.11
+jarn.mkrelease==3.8
+lazy==1.1
+paramiko==1.14.0
+pycrypto==2.6.1
+pyliblzma==0.5.3
+setuptools-git==1.0
+setuptools-hg==0.4
+setuptools-subversion==3.1
+wsgiref==0.1.2
+zc.buildout==2.2.1
