@@ -16,7 +16,6 @@ Creating and configuring the jail host
 - If your SSH public key is *not* in ``~/.ssh/identity.pub``, copy it to ``etc/authorized_keys``
 - Next run ``make startvm``. This will download a `FreeBSD ISO image (mfsBSD)`_ (ca. 136Mb) so you might want to give that a minute, as well :) 
 - It will boot up VirtualBox from the downloaded image – wait until the login prompt appears, then...
-- Next we pre-download all other required assets to bootstrap the system like so ``make fetch_assets``
 - Run ``bin/ploy bootstrap-jailhost`` - this will install FreeBSD from the image onto the VirtualBox container
 - Answer ``y`` for the questions coming up
 - After the installation has completed the machine will automatically reboot.
