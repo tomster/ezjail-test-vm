@@ -35,7 +35,7 @@ python:
 
 
 bin/buildout: $(PYTHON_TARGETS)
-	bin/pip install -r requirements.txt
+	ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future bin/pip install -r requirements.txt
 
 
 bin/ploy develop .installed.cfg: bin/buildout buildout.cfg src/*/setup.py
