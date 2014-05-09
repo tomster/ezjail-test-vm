@@ -35,7 +35,7 @@ python:
 
 
 bin/ansible: $(PYTHON_TARGETS)
-	bin/pip install --upgrade --force-reinstall ansible
+	bin/pip install --upgrade --force-reinstall ansible==1.5.5
 	touch bin/ansible
 
 
