@@ -50,6 +50,8 @@ bin/buildout: $(PYTHON_TARGETS) bin/ansible
 check_mfsbsd_download: bin/python
 	bin/python bin/download.py "$(MFSBSD_URL)" $(MFSBSD_SHA) "$(MFSBSD_PATH)"
 
+$(MFSBSD_PATH): downloads
+
 mfsbsd_download: check_mfsbsd_download $(MFSBSD_PATH)
 
 
