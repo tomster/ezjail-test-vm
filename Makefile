@@ -34,7 +34,7 @@ python:
 	$(VIRTUALENV) --clear .
 
 
-bin/buildout: $(PYTHON_TARGETS) bin/ansible
+bin/buildout: $(PYTHON_TARGETS)
 	bin/pip install -r requirements.txt
 
 
