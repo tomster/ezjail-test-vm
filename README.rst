@@ -12,8 +12,7 @@ This example uses `VirtualBox`_ and assumes that that is already installed and i
 Creating and configuring the jail host
 ======================================
 
-- Run ``make``. This will install development versions of `BSDploy`_ and its dependencies. Give it a minute :)
-- If your SSH public key is *not* in ``~/.ssh/identity.pub``, copy it to ``etc/authorized_keys``
+- Run ``make develop``. This will install development versions of `BSDploy`_ and its dependencies. Give it a minute :)
 - Next run ``make startvm``. This will download a `FreeBSD ISO image (mfsBSD)`_ (ca. 136Mb) so you might want to give that a minute, as well :) 
 - It will boot up VirtualBox from the downloaded image – wait until the login prompt appears, then...
 - Run ``bin/ploy bootstrap-jailhost`` - this will install FreeBSD from the image onto the VirtualBox container
