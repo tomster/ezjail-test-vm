@@ -38,7 +38,7 @@ bin/buildout: $(PYTHON_TARGETS)
 	bin/pip install -r requirements.txt
 
 
-develop .installed.cfg: bin/buildout buildout.cfg src/*/setup.py
+bin/ploy develop .installed.cfg: bin/buildout buildout.cfg src/*/setup.py
 	bin/buildout -v
 
 check_mfsbsd_download: bin/python
@@ -48,6 +48,8 @@ $(MFSBSD_PATH): downloads
 
 mfsbsd_download: check_mfsbsd_download $(MFSBSD_PATH)
 
+fetch_assets: bin/ploy
+	bin/ploy do vm-master fetch_assets
 
 $(VM_PATH):
 	mkdir -p $(VM_PATH)
