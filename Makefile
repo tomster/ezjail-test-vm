@@ -82,8 +82,8 @@ destroyvm:
 	-VBoxManage unregistervm $(VM_NAME) --delete
 
 
-clean: destroyvm
-	rm -rf bin lib include share
+clean:
+	rm -rf lib include share
 
 
 dist-clean: clean
