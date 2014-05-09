@@ -65,3 +65,10 @@ To destroy the virtual machine, run ``make destroyvm``.
 .. _`FreeBSD ISO image (mfsBSD)`: http://mfsbsd.vx.sk
 .. _`ezjail`: http://erdgeist.org/arts/software/ezjail/
 .. _`Python`: http://www.python.org
+
+
+TODO:
+-----
+
+- [ ] fix online installation (`/mnt/var/cache/pkg/digest.txz` missing)
+- [ ] allow providing of the jailhost, even if there is only one
