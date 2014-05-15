@@ -8,12 +8,16 @@ Requirements
 
 This example uses `VirtualBox`_ and assumes that that is already installed and its command line tools are available in your path.
 
+Installation
+============
+
+If you want to install the latest stable release of bsdploy, run ``make install``, if you are keen on the bleeding edge and want to install the development version, run ``make develop``.
+
 
 Creating and configuring the jail host
 ======================================
 
-- Run ``make develop``. This will install development versions of `BSDploy`_ and its dependencies. Give it a minute :)
-- Next run ``make startvm``. This will download a `FreeBSD ISO image (mfsBSD)`_ (ca. 136Mb) so you might want to give that a minute, as well :) 
+- Next run ``make start-vm``. This will download a `FreeBSD ISO image (mfsBSD)`_ (ca. 136Mb) so you might want to give it a minute :) 
 - It will boot up VirtualBox from the downloaded image – wait until the login prompt appears, then...
 - Run ``bin/ploy bootstrap-jailhost`` - this will install FreeBSD from the image onto the VirtualBox container
 - Answer ``y`` for the questions coming up
