@@ -45,7 +45,7 @@ mfsbsd-download: check-mfsbsd-download $(MFSBSD_PATH)
 # setup and manage a virtualbox instance:
 
 VM_BASEFOLDER = $(abspath vm)
-VM_NAME = udolein
+VM_NAME = ezjail-test-vm
 VM_PATH = $(VM_BASEFOLDER)/$(VM_NAME)
 VM_VBOX = $(VM_PATH)/$(VM_NAME).vbox
 VM_BOOT_DISK = $(VM_PATH)/boot.vdi
