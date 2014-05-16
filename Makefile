@@ -29,17 +29,13 @@ MFSBSD_FILENAME = $(lastword $(subst /, ,$(MFSBSD_URL)))
 MFSBSD_PATH = downloads/$(MFSBSD_FILENAME)
 MFSBSD_SHA = 4ef70dfd7b5255e36f2f7e1a5292c7a05019c8ce
 
-check-mfsbsd-download:
-	echo "$(MFSBSD_SHA)  $(MFSBSD_PATH)" | shasum -c || rm -f $(MFSBSD_PATH)
-
 downloads:
 	mkdir -p downloads
 
 $(MFSBSD_PATH): downloads
-	wget -c "$(MFSBSD_URL)" -O $(MFSBSD_PATH)
-	touch $(MFSBSD_PATH)
+	bin/python bin/download.py $(MFSBSD_URL) $(MFSBSD_SHA) $(MFSBSD_PATH)
 
-mfsbsd-download: check-mfsbsd-download $(MFSBSD_PATH)
+mfsbsd-download: $(MFSBSD_PATH)
 
 
 # setup and manage a virtualbox instance:
