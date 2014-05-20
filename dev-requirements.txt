@@ -2,7 +2,6 @@ Jinja2==2.7.2
 MarkupSafe==0.23
 PyYAML==3.11
 ansible==1.5.5
-bsdploy>=0.1alpha1
 ecdsa==0.11
 jarn.mkrelease==3.8
 lazy==1.1

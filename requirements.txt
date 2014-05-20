@@ -8,7 +8,7 @@ mr.awsome.ansible>=1.0b2
 mr.awsome.ezjail>=1.0b2
 mr.awsome.ec2>=1.0b2
 mr.awsome.fabric>=1.0b2
-bsdploy>=0.1alpha1
+bsdploy>=0.1a2
 ecdsa==0.11
 lazy==1.1
 paramiko==1.14.0

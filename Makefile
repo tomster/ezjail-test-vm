@@ -16,7 +16,7 @@ develop: .installed.cfg
 	bin/buildout -v
 
 bin/buildout: bin/pip
-	bin/pip install -r dev-requirements.txt
+	bin/pip install --upgrade -r dev-requirements.txt
 
 fetch_assets: bin/ploy
 	bin/ploy do vm-master fetch_assets
