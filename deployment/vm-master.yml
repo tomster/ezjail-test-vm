@@ -1,8 +1,0 @@
----
-- hosts: vm-master
-  user: root
-  roles:
-    - dhcp_host
-    - jails_host
-    - data_zfs_layout
-    - zfs_auto_snapshot
