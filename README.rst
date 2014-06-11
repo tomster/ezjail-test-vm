@@ -12,14 +12,14 @@ This example uses `VirtualBox`_ and assumes that that is already installed and i
 Creating and configuring the jail host
 ======================================
 
-- Run ``make``. This will install development versions of `BSDploy`_ and its dependencies. Give it a minute :)
+- Run ``make``. This will install development versions of `BSDploy`_ and its dependencies as well as download a `FreeBSD ISO image (mfsBSD)`_ (ca. 136Mb). Give it a minute :)
 - If your SSH public key is *not* in ``~/.ssh/identity.pub``, copy it to ``etc/authorized_keys``
-- Next run ``make startvm``. This will download a `FreeBSD ISO image (mfsBSD)`_ (ca. 136Mb) so you might want to give that a minute, as well :) 
+- Next run ``bin/ploy start ezjail-test-vm``.
 - It will boot up VirtualBox from the downloaded image – wait until the login prompt appears, then...
-- Run ``bin/ploy bootstrap-jailhost vm-master`` - this will install FreeBSD from the image onto the VirtualBox container
+- Run ``bin/ploy bootstrap`` - this will install FreeBSD from the image onto the VirtualBox container
 - Answer ``y`` for the questions coming up
 - After the installation has completed the machine will automatically reboot.
-- After the machine has booted into the fresh installation, run ``bin/ploy configure-jailhost vm-master`` – this will prepare the `FreeBSD`_ installation for our use (by installing `ezjail`_ and `Python`_ etc. onto it).
+- After the machine has booted into the fresh installation, run ``bin/ploy configure vm-master`` – this will prepare the `FreeBSD`_ installation for our use (by installing `ezjail`_ and `Python`_ etc. onto it).
 
 
 Install a simple web server
