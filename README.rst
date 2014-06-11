@@ -35,7 +35,7 @@ The first example will install a (very) minimal ``nginx`` webserver along with a
 - So, first run ``./bin/ploy start webserver``
 - Then you configure it by running ``./bin/ploy playbook deployment/webserver.yml`` (currently the SSH connection can randomly fail upon the first attempt – if this happens, simply try again)
 
-If the above succeeded, you should be able to visit `http://localhost:47023/ <http://localhost:47023/>`_ in your browser and it should display the sample web page.
+If the above succeeded, you should be able to visit `http://webserver.192.168.56.13.xip.io/ <http://webserver.192.168.56.13.xip.io/>`_ in your browser and it should display the sample web page.
 
 
 Install a Bittorrent Sync node
