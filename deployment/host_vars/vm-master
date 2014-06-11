@@ -2,10 +2,12 @@ jails_dir: /usr/jails
 jails_zfs_root: tank/jails
 zfs_checksum: fletcher4
 pkg_txz_url: http://pkg.freebsd.org/freebsd:9:x86:64/latest/Latest/pkg.txz
+ipnat_rules_interface: "{{ ansible_em0.device }}"
+ipnat_rules_address: "{{ ansible_em0.ipv4[0].address }}"
 ipnat_rules:
     - "# https forward for webserver:"
-    - "rdr {{ ansible_default_ipv4.interface }} {{ ansible_default_ipv4.address }}/32 port 80 -> {{ hostvars['webserver']['awsome_ip'] }} port 80"
+    - "rdr {{ ipnat_rules_interface }} {{ ipnat_rules_address }}/32 port 80 -> {{ hostvars['webserver']['awsome_ip'] }} port 80"
     - "# forwards for btsync:"
-    - "rdr {{ ansible_default_ipv4.interface }} {{ ansible_default_ipv4.address }}/32 port 6667 -> {{ hostvars['btsync']['awsome_ip'] }} port 6667"
-    - "rdr {{ ansible_default_ipv4.interface }} {{ ansible_default_ipv4.address }}/32 port 6668 -> {{ hostvars['btsync']['awsome_ip'] }} port 6668"
+    - "rdr {{ ipnat_rules_interface }} {{ ipnat_rules_address }}/32 port 6667 -> {{ hostvars['btsync']['awsome_ip'] }} port 6667"
+    - "rdr {{ ipnat_rules_interface }} {{ ipnat_rules_address }}/32 port 6668 -> {{ hostvars['btsync']['awsome_ip'] }} port 6668"
 dhcp_host_sshd_interface: "em0"
