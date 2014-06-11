@@ -42,7 +42,7 @@ bin/buildout: $(PYTHON_TARGETS) bin/ansible
 	bin/buildout -v
 
 check_mfsbsd_download: .installed.cfg
-	bin/python bin/ploy-download "$(MFSBSD_URL)" $(MFSBSD_SHA) "$(MFSBSD_PATH)"
+	bin/ploy-download "$(MFSBSD_URL)" $(MFSBSD_SHA) "$(MFSBSD_PATH)"
 
 $(MFSBSD_PATH): downloads
 	touch $(MFSBSD_PATH)
