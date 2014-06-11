@@ -50,13 +50,8 @@ $(MFSBSD_PATH): downloads
 mfsbsd_download: check_mfsbsd_download $(MFSBSD_PATH)
 
 
-destroyvm: .installed.cfg
-	bin/ploy terminate ezjail-test-vm
-
-
-clean: destroyvm
+clean:
 	rm -rf bin lib include share
-
 
 dist-clean: clean
 	git clean -dxxf src

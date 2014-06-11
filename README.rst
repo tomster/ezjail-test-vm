@@ -59,9 +59,9 @@ Try clicking on `Add Folder <http://localhost:16668/gui/en/index.html#add-dialog
 Clean up
 ========
 
-To stop the virtual machine, run ``make stopvm``.
+To stop the virtual machine, run ``ploy stop ezjail-test-vm``.
 
-To destroy the virtual machine, run ``make destroyvm``.
+To destroy the virtual machine, run ``ploy terminate ezjail-test-vm``.
 
 
 .. _`BSDploy`: https://github.com/tomster/bsdploy
