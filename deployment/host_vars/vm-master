@@ -8,3 +8,4 @@ ipnat_rules:
     - "# forwards for btsync:"
     - "rdr {{ ansible_default_ipv4.interface }} {{ ansible_default_ipv4.address }}/32 port 6667 -> {{ hostvars['btsync']['awsome_ip'] }} port 6667"
     - "rdr {{ ansible_default_ipv4.interface }} {{ ansible_default_ipv4.address }}/32 port 6668 -> {{ hostvars['btsync']['awsome_ip'] }} port 6668"
+dhcp_host_sshd_interface: "em1"
